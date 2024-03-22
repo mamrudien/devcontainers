@@ -1,0 +1,9 @@
+{
+    "name": "Android SDK",
+    "id": "android-sdk",
+    "version": "0.1.0",
+    "description": "Providing the necessary tools and environment for Android development.",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
