@@ -3,6 +3,7 @@
     "id": "android-sdk-feature",
     "version": "0.1.0",
     "description": "Providing the necessary tools and environment for Android development.",
+    "documentationURL": "https://github.com/mamrudien/devcontainers/tree/main/src/android-sdk",
     "options": {
         "commandLineToolsVersion": {
             "type": "string",
