@@ -45,9 +45,9 @@ else
 fi
 
 pkg_install() {
-    if [ ${PKG_MANAGER} = "apt-get" ] then
+    if [ ${PKG_MANAGER} = "apt-get" ]; then
         apt-get -y install --no-install-recommends "$@"
-    elif [ ${PKG_MANAGER} = "microdnf" ] then
+    elif [ ${PKG_MANAGER} = "microdnf" ]; then
         microdnf -y install --refresh --best --nodocs --noplugins --setopt=install_weak_deps=0 "$@"
     else
         $PKG_MANAGER -y install "$@"
