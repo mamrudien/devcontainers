@@ -197,6 +197,7 @@ if [ ! -d "${ANDROID_HOME}" ]; then
     mkdir -p $ANDROID_HOME
     curl -sSLO "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
     unzip commandlinetools-linux-11076708_latest.zip -d ${ANDROID_HOME}
+    unlink commandlinetools-linux-11076708_latest.zip
     chown -R "${USERNAME}:android-sdk" ${ANDROID_HOME}
     find ${ANDROID_HOME} -type d -print0 | xargs -d '\n' -0 chmod g+s
     # Add sourcing of Android SDK into bashrc/zshrc files (unless disabled)
