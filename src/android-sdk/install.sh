@@ -3,6 +3,8 @@
 export ANDROID_HOME="${ANDROID_HOME:-"/usr/local/android/sdk"}"
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin
 
+CLITOOLS_VERSION=${COMMANDLINETOOLSVERSION:-"latest"}
+
 USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
 UPDATE_RC="${UPDATE_RC:-"true"}"
 
@@ -185,23 +187,23 @@ if ! type curl > /dev/null 2>&1; then
     require_packages curl
 fi
 
-# Install Android SDK if not installed
-if [ ! -d "${ANDROID_HOME}" ]; then
-    # Create android-sdk group, dir, and set sticky bit
-    if ! cat /etc/group | grep -e "^android-sdk:" > /dev/null 2>&1; then
-        groupadd -r android-sdk
-    fi
-    usermod -a -G android-sdk ${USERNAME}
-    umask 0002
-    # Install Android SDK
-    mkdir -p $ANDROID_HOME
+if ! cat /etc/group | grep -e "^android-sdk:" > /dev/null 2>&1; then
+    groupadd -r android-sdk
+fi
+usermod -a -G android-sdk ${USERNAME}
+
+mkdir -p $ANDROID_HOME
+chown -R "$USERNAME:android-sdk" $ANDROID_HOME
+save2rc "export ANDROID_HOME=$ANDROID_HOME"
+
+# Install Android Command Line Tools if not installed
+if [[ "$CLITOOLS_VERSION" != "none" ]]; then
     curl -sSLO "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
-    unzip commandlinetools-linux-11076708_latest.zip -d ${ANDROID_HOME}
+    unzip -u commandlinetools-linux-11076708_latest.zip -d $ANDROID_HOME
     unlink commandlinetools-linux-11076708_latest.zip
-    chown -R "${USERNAME}:android-sdk" ${ANDROID_HOME}
-    find ${ANDROID_HOME} -type d -print0 | xargs -d '\n' -0 chmod g+s
-    # Add sourcing of Android SDK into bashrc/zshrc files (unless disabled)
-    save2rc "export ANDROID_HOME=$ANDROID_HOME PATH=$PATH:$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin"
+    chown -R "$USERNAME:android-sdk" $ANDROID_HOME/cmdline-tools
+    find $ANDROID_HOME/cmdline-tools -type d -print0 | xargs -d '\n' -0 chmod g+s
+    save2rc "export PATH=\$PATH:$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin"
 fi
 
 # Clean up

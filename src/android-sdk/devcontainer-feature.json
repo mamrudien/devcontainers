@@ -3,9 +3,20 @@
     "id": "android-sdk-feature",
     "version": "0.1.0",
     "description": "Providing the necessary tools and environment for Android development.",
+    "options": {
+        "commandLineToolsVersion": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "none"
+            ],
+            "default": "latest",
+            "description": "Select or enter a Command Line Tools version"
+        }
+    },
     "containerEnv": {
-      "ANDROID_HOME": "/usr/local/android/sdk",
-      "PATH": "/usr/local/android/sdk/cmdline-tools:/usr/local/android/sdk/cmdline-tools/bin:${PATH}"
+        "ANDROID_HOME": "/usr/local/android/sdk",
+        "PATH": "/usr/local/android/sdk/cmdline-tools:/usr/local/android/sdk/cmdline-tools/bin:${PATH}"
     },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils"
