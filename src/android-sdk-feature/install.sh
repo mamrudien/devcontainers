@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-export ANDROID_HOME="${ANDROID_HOME:-"/usr/local/android/sdk"}"
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin
-
 CLITOOLS_VERSION=${COMMANDLINETOOLSVERSION:-"latest"}
+
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/$CLITOOLS_VERSION:$ANDROID_HOME/cmdline-tools/$CLITOOLS_VERSION/bin
 
 USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
 UPDATE_RC="${UPDATE_RC:-"true"}"
@@ -194,16 +193,18 @@ usermod -a -G android-sdk ${USERNAME}
 
 mkdir -p $ANDROID_HOME
 chown -R "$USERNAME:android-sdk" $ANDROID_HOME
-save2rc "export ANDROID_HOME=$ANDROID_HOME"
 
-# Install Android Command Line Tools if not installed
+# Install Android Command Line Tools
 if [[ "$CLITOOLS_VERSION" != "none" ]]; then
+    rm -r -f $ANDROID_HOME/cmdline-tools
     curl -sSLO "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
     unzip -u commandlinetools-linux-11076708_latest.zip -d $ANDROID_HOME
+    mv $ANDROID_HOME/cmdline-tools $ANDROID_HOME/$CLITOOLS_VERSION
+    mkdir $ANDROID_HOME/cmdline-tools
+    mv -t $ANDROID_HOME/cmdline-tools $ANDROID_HOME/$CLITOOLS_VERSION
     unlink commandlinetools-linux-11076708_latest.zip
-    chown -R "$USERNAME:android-sdk" $ANDROID_HOME/cmdline-tools
-    find $ANDROID_HOME/cmdline-tools -type d -print0 | xargs -d '\n' -0 chmod g+s
-    save2rc "export PATH=\$PATH:$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin"
+    chown -R "$USERNAME:android-sdk" $ANDROID_HOME
+    find $ANDROID_HOME -type d -print0 | xargs -d '\n' -0 chmod g+s
 fi
 
 # Clean up
