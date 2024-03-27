@@ -207,10 +207,10 @@ if [[ "$CLITOOLS_VERSION" != "none" ]]; then
     chown -R "$USERNAME:android-sdk" $ANDROID_HOME
     find $ANDROID_HOME -type d -print0 | xargs -d '\n' -0 chmod g+s
 
-    yes | ${ANDROID_HOME}/latest/bin/sdkmanager --licenses
+    yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses
 
     if [[ "$CLITOOLS_VERSION" != "latest" ]]; then
-        ${ANDROID_HOME}/latest/bin/sdkmanager "cmdline-tools;$CLITOOLS_VERSION"
+        ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "cmdline-tools;$CLITOOLS_VERSION"
     fi
 fi
 
