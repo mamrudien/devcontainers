@@ -199,12 +199,19 @@ if [[ "$CLITOOLS_VERSION" != "none" ]]; then
     rm -r -f $ANDROID_HOME/cmdline-tools
     curl -sSLO "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
     unzip -u commandlinetools-linux-11076708_latest.zip -d $ANDROID_HOME
-    mv $ANDROID_HOME/cmdline-tools $ANDROID_HOME/$CLITOOLS_VERSION
+    mv $ANDROID_HOME/cmdline-tools $ANDROID_HOME/latest
     mkdir $ANDROID_HOME/cmdline-tools
-    mv -t $ANDROID_HOME/cmdline-tools $ANDROID_HOME/$CLITOOLS_VERSION
+    mv -t $ANDROID_HOME/cmdline-tools $ANDROID_HOME/latest
     unlink commandlinetools-linux-11076708_latest.zip
+
     chown -R "$USERNAME:android-sdk" $ANDROID_HOME
     find $ANDROID_HOME -type d -print0 | xargs -d '\n' -0 chmod g+s
+
+    yes | ${ANDROID_HOME}/latest/bin/sdkmanager --licenses
+
+    if [[ "$CLITOOLS_VERSION" != "latest" ]]; then
+        ${ANDROID_HOME}/latest/bin/sdkmanager "cmdline-tools;$CLITOOLS_VERSION"
+    fi
 fi
 
 # Clean up
